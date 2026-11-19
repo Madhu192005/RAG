@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – Waste Classification</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>
+    .upload-box {
+      border: 2px dashed var(--clr-primary-lt);
+      border-radius: var(--radius-lg);
+      padding: 40px 24px;
+      text-align: center;
+      background: var(--clr-surface);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      position: relative;
+    }
+    .upload-box:hover, .upload-box.drag-over {
+      background: var(--clr-primary-pale);
+      border-color: var(--clr-primary);
+    }
+    .preview-container {
+      margin-top: 20px;
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      max-height: 340px;
+      background: #000;
+      display: none;
+    }
+    .preview-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .preview-remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .preview-remove-btn:hover {
+      background: var(--clr-danger);
+    }
+    .category-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .category-chip {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border-lt);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li>
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li>
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li>
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li>
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li>
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.4.0 (Step 7)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">Waste Vision Classification</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">Waste image classification</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1>Visual Waste Classification</h1>
+          <p>Classify an item, verify uncertain or safety-sensitive results, and get source-cited disposal guidance.</p>
+        </div>
+
+        <div class="dash-grid-2">
+          <!-- Left: Image Upload & Preview -->
+          <div class="card">
+            <div class="card-header">
+              <h2>1. Upload Material Image</h2>
+              <span class="badge badge-grey">PNG, JPG, WebP</span>
+            </div>
+            <div class="card-body">
+              <div class="upload-box" id="dropArea">
+                <div style="font-size:3rem;margin-bottom:12px;">📸</div>
+                <h3>Drag &amp; drop your image here</h3>
+                <p class="text-muted" style="margin:8px 0 16px;">or browse files from your computer or camera</p>
+                <button type="button" class="btn btn-secondary btn-sm" id="browseFileBtn">Select Image File</button>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" style="display:none;" />
+              </div>
+
+              <!-- Preview Zone -->
+              <div class="preview-container" id="previewContainer">
+                <img id="previewImage" alt="Waste preview" />
+                <button class="preview-remove-btn" id="removeImgBtn">✕ Remove Image</button>
+              </div>
+
+              <div id="fileMeta" style="margin-top:12px;font-size:0.85rem;color:var(--clr-text-muted);display:none;">
+                Selected: <strong id="fileNameDisplay" style="color:var(--clr-text);"></strong> (<span id="fileSizeDisplay"></span>)
+              </div>
+              <label for="classificationLocation" class="form-label mt-3">Location for applicable local guidance (optional)</label>
+              <input class="form-control" id="classificationLocation" maxlength="200" placeholder="City, state, or municipality" />
+
+              <div class="mt-3">
+                <button class="btn btn-primary btn-block btn-lg" id="classifyBtn" disabled>
+                  🔍 Run Classification Analysis
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Classification Results & User Correction -->
+          <div class="card">
+            <div class="card-header">
+              <h2>2. Classification &amp; Guidance Output</h2>
+              <span class="badge badge-orange" id="statusBadge">Awaiting Input</span>
+            </div>
+            <div class="card-body" id="resultOutputBody">
+              <!-- Initial Empty State -->
+              <div class="empty-state" id="emptyStateBox">
+                <div class="empty-icon">🔬</div>
+                <h3>No Image Analyzed</h3>
+                <p>Upload a photograph of an item (bottle, food, packaging, battery) to review categorization, confidence ratings, and municipal guidance.</p>
+              </div>
+
+              <!-- Result Container (Initially hidden) -->
+              <div id="resultContent" style="display:none;">
+                <div id="classificationMessage" class="alert alert-warning" role="status" style="display:none;"></div>
+
+                <!-- Classification Details -->
+                <div style="background:var(--clr-surface);padding:18px;border-radius:var(--radius-md);border:1px solid var(--clr-border-lt);margin-bottom:20px;">
+                  <div class="flex-between">
+                    <div>
+                      <span class="text-muted" style="font-size:0.8rem;text-transform:uppercase;">Material Identification</span>
+                      <h3 style="color:var(--clr-primary);margin-top:2px;" id="resultCategoryTitle">Image Received</h3>
+                    </div>
+                    <span class="badge badge-grey" id="confidenceLabel">Confidence unavailable</span>
+                  </div>
+
+                  <div class="confidence-bar-wrap" style="margin-top:14px;">
+                    <div class="confidence-label">
+                      <span>Model Confidence Threshold</span>
+                      <span id="confidencePct">0%</span>
+                    </div>
+                    <div class="confidence-bar">
+                      <div class="confidence-fill" id="confidenceFill" style="width:0%;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Explanation Section -->
+                <div class="mb-3">
+                  <h4 style="font-size:0.95rem;margin-bottom:8px;">Classification Diagnostics &amp; Next Steps</h4>
+                  <p class="text-muted" id="categoryDescription" style="font-size:0.9rem;line-height:1.55;"></p>
+                  <h4 style="font-size:0.95rem;margin:14px 0 8px;">Top predictions</h4>
+                  <ol id="topPredictions" class="text-muted"></ol>
+                  <div id="guidancePanel" style="display:none;margin-top:16px;">
+                    <h4 style="font-size:0.95rem;margin-bottom:8px;">Evidence-based disposal guidance</h4>
+                    <p id="guidanceAnswer" style="line-height:1.55;"></p>
+                    <ul id="guidanceSources" class="text-muted"></ul>
+                  </div>
+                  <a id="findCentersLink" class="btn btn-secondary btn-sm mt-2" href="finder.html" style="display:none;">Find centers that accept this item</a>
+                  <a id="requestCollectionLink" class="btn btn-primary btn-sm mt-2" href="collection.html" style="display:none;">Request collection for this item</a>
+                  <a id="requestCollectionLink" class="btn btn-primary btn-sm mt-2" href="collection.html" style="display:none;">Request collection for this item</a>
+                </div>
+
+                <!-- User Correction Section -->
+                <div style="border-top:1px solid var(--clr-border-lt);padding-top:16px;">
+                  <h4 style="font-size:0.95rem;margin-bottom:8px;">Incorrect Result? Submit Correction</h4>
+                  <p class="text-muted" style="font-size:0.82rem;margin-bottom:12px;">Confirm the item before specific disposal guidance is generated.</p>
+                  
+                  <div style="display:flex;gap:10px;">
+                    <select class="form-control" id="correctionSelect">
+                      <option value="">Select item class...</option>
+                      <option>Plastic</option><option>Paper / Cardboard</option><option>Metal</option><option>Glass</option>
+                      <option>Organic / Food</option><option>Sanitary Products</option><option>Battery / E-Waste</option><option>Other / Unknown</option>
+                    </select>
+                    <button class="btn btn-secondary btn-sm" id="submitCorrectionBtn">Save</button>
+                  </div>
+                  <div id="correctionFeedback" style="display:none;margin-top:8px;font-size:0.82rem;color:var(--clr-primary);font-weight:600;">
+                    ✓ Annotation recorded locally.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reference Categories Card -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <h2>Supported image classes</h2>
+            <span class="badge badge-green">Model classes</span>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">Material appearance cannot reliably identify hazardous contents or local recycling rules. Battery, sanitary, and unknown-item predictions require manual confirmation; disposal instructions come from the cited knowledge base.</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/classification.js"></script>
+</body>
+</html>

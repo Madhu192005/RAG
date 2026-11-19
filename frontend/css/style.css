@@ -1,0 +1,280 @@
+/* =============================================================
+   WasteWise AI – style.css
+   Color palette:
+     Primary green  : #2e7d32
+     Light green    : #4caf50
+     Accent green   : #81c784
+     Background     : #f1f8e9
+     White card     : #ffffff
+     Text dark      : #1b1b1b
+     Text muted     : #555555
+   ============================================================= */
+
+/* ---------- Reset & base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f1f8e9;
+  color: #1b1b1b;
+  line-height: 1.6;
+}
+
+/* ---------- Hero / Header ---------- */
+.hero {
+  background: linear-gradient(135deg, #2e7d32 0%, #4caf50 60%, #81c784 100%);
+  color: #ffffff;
+  padding: 60px 20px 50px;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 4rem;
+  margin-bottom: 10px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+h1 .accent {
+  color: #c8e6c9;
+}
+
+.tagline {
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  font-weight: 600;
+  margin-bottom: 16px;
+  opacity: 0.95;
+}
+
+.description {
+  font-size: clamp(0.88rem, 2vw, 1rem);
+  opacity: 0.9;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ---------- Main container ---------- */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+/* ---------- Feature cards ---------- */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 50px;
+}
+
+.feature-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(46, 125, 50, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-top: 4px solid #4caf50;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.2);
+}
+
+.feature-icon {
+  font-size: 2.4rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.feature-card h3 {
+  color: #2e7d32;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.feature-card p {
+  color: #555555;
+  font-size: 0.93rem;
+}
+
+/* ---------- Connection tester section ---------- */
+.connection-section {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 36px 32px;
+  box-shadow: 0 2px 14px rgba(46, 125, 50, 0.1);
+  text-align: center;
+}
+
+.connection-section h2 {
+  color: #2e7d32;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.hint {
+  color: #555555;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+/* ---------- Primary button ---------- */
+.btn-primary {
+  background: linear-gradient(90deg, #2e7d32, #4caf50);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- Result box ---------- */
+.result-box {
+  margin-top: 28px;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: left;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.result-box.hidden {
+  display: none;
+}
+
+/* Success state */
+.result-box.success {
+  border-color: #4caf50;
+}
+
+.result-box.success .result-header {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Error state */
+.result-box.error {
+  border-color: #e53935;
+}
+
+.result-box.error .result-header {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Loading state */
+.result-box.loading {
+  border-color: #ffa726;
+}
+
+.result-box.loading .result-header {
+  background: #fff8e1;
+  color: #e65100;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+#statusIcon {
+  font-size: 1.3rem;
+}
+
+pre#responseData {
+  background: #f5f5f5;
+  padding: 16px 18px;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #333333;
+  margin: 0;
+  font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: #2e7d32;
+  color: #c8e6c9;
+  text-align: center;
+  padding: 22px 20px;
+  font-size: 0.88rem;
+}
+
+.footer p + p {
+  margin-top: 6px;
+}
+
+.footer-hint {
+  opacity: 0.75;
+}
+
+.footer code {
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.82rem;
+  color: #ffffff;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 600px) {
+  .connection-section {
+    padding: 24px 16px;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+}

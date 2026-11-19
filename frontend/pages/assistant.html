@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – AI Recycling Assistant</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      height: calc(100vh - var(--topbar-h) - 100px);
+      min-height: 520px;
+    }
+    .chat-pane {
+      display: flex;
+      flex-direction: column;
+      background: var(--clr-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      border: 1px solid var(--clr-border-lt);
+    }
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--clr-border-lt);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--clr-surface);
+    }
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: #fdfdfd;
+    }
+    .chat-msg {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--clr-primary);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-msg.assistant {
+      align-self: flex-start;
+      background: var(--clr-surface);
+      color: var(--clr-text);
+      border: 1px solid var(--clr-border);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-msg .msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 6px;
+    }
+    .chat-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--clr-border-lt);
+      background: var(--clr-white);
+    }
+    .chat-form {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .chat-form textarea {
+      flex: 1;
+      height: 48px;
+      max-height: 110px;
+      resize: none;
+      padding: 12px 16px;
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .chat-form textarea:focus {
+      border-color: var(--clr-primary-lt);
+    }
+    .side-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .suggest-chip {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      color: var(--clr-text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .suggest-chip:hover {
+      background: var(--clr-primary-pale);
+      border-color: var(--clr-primary-lt);
+    }
+
+    @media (max-width: 960px) {
+      .chat-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .side-pane {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li>
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li>
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li class="active">
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li>
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li>
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li>
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.2.0 (Step 2)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">AI Recycling Assistant</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">⚠️ Model Unconnected (Step 2 Preview)</div>
+          <button class="btn btn-secondary btn-sm" id="clearChatBtn">🗑️ Clear Chat</button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header" style="margin-bottom:16px;">
+          <h1>Conversational Recycling Guidance</h1>
+          <p>Ask technical questions about material composition, municipal disposal mandates, or facility policies.</p>
+        </div>
+
+        <div class="chat-layout">
+          <!-- Main Chat Pane -->
+          <div class="chat-pane">
+            <div class="chat-header">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:1.4rem;">🤖</span>
+                <div>
+                  <strong style="color:var(--clr-text)">WasteWise Intelligence Engine</strong>
+                  <div style="font-size:0.75rem;color:var(--clr-text-muted)">State: Ready for FastAPI RAG pipeline (Step 3)</div>
+                </div>
+              </div>
+              <span class="badge badge-orange">Preview Mode</span>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-body" id="chatContainer">
+              <!-- Initial Greeting -->
+              <div class="chat-msg assistant">
+                <div>
+                  Hello! I am the <strong>WasteWise Recycling Assistant</strong>.
+                </div>
+                <div style="margin-top:8px;">
+                  In later project steps, I will be wired to our Retrieval-Augmented Generation (RAG) backend to provide precision guidance on local municipal rules, polymer types, and hazardous waste protocols.
+                </div>
+                <div style="margin-top:8px;font-size:0.88rem;color:var(--clr-text-muted);">
+                  💡 Try submitting a question below to test the interface workflow.
+                </div>
+                <div class="msg-meta">
+                  <span>Assistant · Ready</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="chat-footer">
+              <form class="chat-form" id="chatForm">
+                <textarea
+                  id="chatInput"
+                  placeholder="Ask a waste management or recycling question (e.g., 'How to recycle blister packs?')..."
+                  required
+                ></textarea>
+                <button type="submit" class="btn btn-primary" id="chatSubmitBtn" style="height:48px;padding:0 24px;">
+                  Send ↗
+                </button>
+              </form>
+              <div style="font-size:0.78rem;color:var(--clr-text-muted);margin-top:8px;display:flex;justify-content:space-between;">
+                <span>Shift + Enter for new line</span>
+                <span>Honest status: No mock AI responses</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Pane with Suggestions and Citations -->
+          <div class="side-pane">
+            <!-- Suggested Queries -->
+            <div class="card">
+              <div class="card-header">
+                <h2>Prompt Suggestions</h2>
+              </div>
+              <div class="card-body">
+                <p class="text-muted" style="font-size:0.85rem;margin-bottom:12px;">Click to populate the query field:</p>
+                <button class="suggest-chip" data-query="How do I properly dispose of lithium-ion batteries?">
+                  🔋 Disposing lithium-ion batteries
+                </button>
+                <button class="suggest-chip" data-query="Can greasy cardboard pizza boxes be recycled?">
+                  🍕 Greasy pizza box recycling
+                </button>
+                <button class="suggest-chip" data-query="What plastics fall under Resin Code #5 (PP)?">
+                  🏷️ Polypropylene (PP #5) items
+                </button>
+                <button class="suggest-chip" data-query="What is the difference between biodegradable and compostable?">
+                  🌿 Biodegradable vs Compostable
+                </button>
+              </div>
+            </div>
+
+            <!-- Knowledge Sources / Citations Card -->
+            <div class="card">
+              <div class="card-header">
+                <h2>Source Citations</h2>
+                <span class="badge badge-grey">RAG Target</span>
+              </div>
+              <div class="card-body" id="citationsBody">
+                <div class="empty-state" style="padding:16px 0;">
+                  <div class="empty-icon" style="font-size:1.8rem;">📚</div>
+                  <h3 style="font-size:0.95rem;">No active sources</h3>
+                  <p style="font-size:0.8rem;">Source documents and municipal recycling guidelines will be cited here when the Step 3 RAG engine is operational.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – AI-Powered Waste Classification &amp; Management</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <style>
+    /* ── Landing Page Specific Styles ── */
+    .landing-header {
+      position: sticky;
+      top: 0;
+      z-index: 300;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--clr-border);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition);
+    }
+    .landing-header.scrolled {
+      box-shadow: var(--shadow-md);
+    }
+    .landing-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--clr-primary);
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.3px;
+    }
+    .nav-brand .brand-badge {
+      font-size: 0.72rem;
+      background: var(--clr-primary-pale);
+      color: var(--clr-primary);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--clr-text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover {
+      color: var(--clr-primary);
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--clr-text);
+    }
+
+    /* ── Hero Section ── */
+    .hero-saas {
+      background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 45%, #388e3c 80%, #4caf50 100%);
+      color: #ffffff;
+      padding: 90px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-saas::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(200, 230, 201, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      backdrop-filter: blur(4px);
+    }
+    .hero-saas h1 {
+      font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+    .hero-saas h1 .highlight {
+      color: #c8e6c9;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .hero-saas .hero-desc {
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      line-height: 1.6;
+      opacity: 0.94;
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .hero-actions .btn-hero-primary {
+      background: #ffffff;
+      color: var(--clr-primary);
+      padding: 14px 34px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    }
+    .hero-actions .btn-hero-primary:hover {
+      background: #f1f8e9;
+      transform: translateY(-2px);
+    }
+    .hero-actions .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      padding: 14px 28px;
+      font-size: 1.02rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(4px);
+    }
+    .hero-actions .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── Sections ── */
+    .saas-section {
+      padding: 85px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .saas-section.alt-bg {
+      background: #ffffff;
+      max-width: 100%;
+      border-top: 1px solid var(--clr-border-lt);
+      border-bottom: 1px solid var(--clr-border-lt);
+    }
+    .saas-section.alt-bg .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 56px;
+    }
+    .section-tag {
+      color: var(--clr-primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--clr-text);
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--clr-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Features Grid ── */
+    .features-saas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+    .feature-saas-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--clr-border-lt);
+      border-top: 4px solid var(--clr-primary-lt);
+      transition: transform var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .feature-saas-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-top-color: var(--clr-primary);
+    }
+    .feature-icon-bubble {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: var(--clr-primary-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: var(--clr-primary);
+    }
+    .feature-saas-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--clr-text);
+      margin-bottom: 10px;
+    }
+    .feature-saas-card p {
+      font-size: 0.95rem;
+      color: var(--clr-text-muted);
+      line-height: 1.55;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+    .feature-card-link {
+      color: var(--clr-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .feature-card-link:hover {
+      gap: 10px;
+      text-decoration: underline;
+    }
+
+    /* ── How It Works ── */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      position: relative;
+    }
+    .step-card-saas {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: 36px 26px;
+      text-align: center;
+      position: relative;
+    }
+    .step-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-lt));
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 3px 10px rgba(46, 125, 50, 0.25);
+    }
+    .step-icon-big {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .step-card-saas h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--clr-text);
+      margin-bottom: 10px;
+    }
+    .step-card-saas p {
+      font-size: 0.92rem;
+      color: var(--clr-text-muted);
+      line-height: 1.55;
+    }
+
+    /* ── Environmental Impact ── */
+    .impact-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .impact-stat-box {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 36px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--clr-border-lt);
+    }
+    .impact-number {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--clr-primary);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .impact-label {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--clr-text);
+      margin-bottom: 6px;
+    }
+    .impact-sub {
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ── Connectivity Diagnostic Card (Step 1 Preserved) ── */
+    .connectivity-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 38px 32px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--clr-border);
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    .saas-footer {
+      background: #173819;
+      color: #e0ece0;
+      padding: 70px 24px 30px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 48px;
+      margin-bottom: 50px;
+    }
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      color: #ffffff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-brand p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      opacity: 0.8;
+      max-width: 320px;
+    }
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 18px;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col li {
+      margin-bottom: 10px;
+    }
+    .footer-col a {
+      color: #c4d7c4;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+    .footer-col a:hover {
+      color: #ffffff;
+    }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      opacity: 0.75;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+    @media (max-width: 580px) {
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+      .saas-section {
+        padding: 56px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <header class="landing-header" id="mainHeader">
+    <nav class="landing-nav">
+      <a href="index.html" class="nav-brand">
+        <span>♻️</span> WasteWise <span style="color:var(--clr-primary-lt)">AI</span>
+        <span class="brand-badge">SaaS</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#impact">Impact</a></li>
+        <li><a href="#connection">System Status</a></li>
+        <li><a href="pages/dashboard.html" class="btn btn-primary btn-sm" style="color:#fff">Open App Dashboard →</a></li>
+      </ul>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+    </nav>
+  </header>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero-saas">
+    <div class="hero-inner">
+      <div class="hero-pill">
+        <span>🌱</span> Enterprise Environmental AI Platform
+      </div>
+      <h1>Intelligent Waste Classification &amp; <span class="highlight">Recycling Operations</span></h1>
+      <p class="hero-desc">
+        Empowering municipalities, sustainable facilities, and eco-conscious citizens with vision-powered classification, intelligent recycling chatbots, and doorstep collection management.
+      </p>
+
+      <div class="hero-actions">
+        <a href="pages/dashboard.html" class="btn btn-hero-primary">Launch Dashboard 🚀</a>
+        <a href="pages/classification.html" class="btn btn-hero-secondary">Try Waste Vision 📷</a>
+        <a href="pages/assistant.html" class="btn btn-hero-secondary">AI Assistant 🤖</a>
+      </div>
+
+      <div style="font-size:0.85rem; opacity:0.85; margin-top:14px;">
+        Pure HTML5 · CSS3 · Vanilla JavaScript &nbsp;|&nbsp; Zero Framework Overhead
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PLATFORM FEATURES ===== -->
+  <section class="saas-section" id="features">
+    <div class="section-header">
+      <span class="section-tag">Core Capabilities</span>
+      <h2 class="section-title">Comprehensive Waste Management Platform</h2>
+      <p class="section-subtitle">
+        Everything required to inspect, segregate, manage, and optimize regional recycling pipelines with environmental precision.
+      </p>
+    </div>
+
+    <div class="features-saas-grid">
+      <!-- 1. Waste Classification -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">📷</div>
+        <h3>Vision Waste Classification</h3>
+        <p>
+          Instant visual categorization of waste items into Recyclable, Organic, Hazardous, E-Waste, and General streams using cutting-edge deep vision models.
+        </p>
+        <a href="pages/classification.html" class="feature-card-link">Inspect Vision Tool →</a>
+      </div>
+
+      <!-- 2. AI Recycling Assistant -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">🤖</div>
+        <h3>AI Recycling Assistant</h3>
+        <p>
+          Interactive conversational agent ready for RAG integration to explain localized disposal mandates, material degradation cycles, and eco-alternatives.
+        </p>
+        <a href="pages/assistant.html" class="feature-card-link">Chat with Assistant →</a>
+      </div>
+
+      <!-- 3. Operations Dashboard -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">📊</div>
+        <h3>Operations Dashboard</h3>
+        <p>
+          Central command center featuring real-time KPI metrics, collection queue statistics, waste category breakdowns, and audit reports.
+        </p>
+        <a href="pages/dashboard.html" class="feature-card-link">Explore Dashboard →</a>
+      </div>
+
+      <!-- 4. Center Finder -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">📍</div>
+        <h3>Recycling Center Finder</h3>
+        <p>
+          Geographic discovery directory mapping certified local drop-off centers, verified facilities, operating hours, and accepted waste typologies.
+        </p>
+        <a href="pages/finder.html" class="feature-card-link">Search Centers →</a>
+      </div>
+
+      <!-- 5. Collection Management -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">🚛</div>
+        <h3>Collection Logistics</h3>
+        <p>
+          Streamlined pickup scheduling module for oversized, bulk, or hazardous materials with automated input validation and tracking.
+        </p>
+        <a href="pages/collection.html" class="feature-card-link">Schedule Collection →</a>
+      </div>
+
+      <!-- 6. Analytics & ESG Reporting -->
+      <div class="feature-saas-card">
+        <div class="feature-icon-bubble">📈</div>
+        <h3>Analytics &amp; ESG Metrics</h3>
+        <p>
+          Rich data visualizations using Chart.js illustrating monthly recovery rates, diverted tonnage, CO₂ emission offsets, and longitudinal trends.
+        </p>
+        <a href="pages/analytics.html" class="feature-card-link">View Analytics →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="saas-section alt-bg" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">Workflow</span>
+        <h2 class="section-title">How WasteWise AI Works</h2>
+        <p class="section-subtitle">
+          A seamless three-step pipeline converting waste uncertainty into verifiable environmental recovery.
+        </p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-card-saas">
+          <div class="step-badge">1</div>
+          <div class="step-icon-big">📸</div>
+          <h3>Capture &amp; Input</h3>
+          <p>
+            Capture an image of any waste product or describe the material to our specialized AI interface.
+          </p>
+        </div>
+
+        <div class="step-card-saas">
+          <div class="step-badge">2</div>
+          <div class="step-icon-big">🧠</div>
+          <h3>AI Analysis &amp; Routing</h3>
+          <p>
+            The intelligence engine parses material composition, checks local municipal bylaws, and determines optimal recovery.
+          </p>
+        </div>
+
+        <div class="step-card-saas">
+          <div class="step-badge">3</div>
+          <div class="step-icon-big">♻️</div>
+          <h3>Actionable Diversion</h3>
+          <p>
+            Receive granular preparation steps, locate nearby drop-offs, or arrange convenient doorstep dispatch.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ENVIRONMENTAL IMPACT ===== -->
+  <section class="saas-section" id="impact">
+    <div class="section-header">
+      <span class="section-tag">Sustainability Benchmarks</span>
+      <h2 class="section-title">Measurable Environmental Impact</h2>
+      <p class="section-subtitle">
+        Accelerating global circular economy goals through verified material diversion and automated tracking.
+      </p>
+      <div class="demo-notice" style="margin-top:12px;">⚠️ Illustrative simulation metrics for platform preview</div>
+    </div>
+
+    <div class="impact-stats-grid">
+      <div class="impact-stat-box">
+        <div class="impact-number">24,800+</div>
+        <div class="impact-label">Items Identified</div>
+        <div class="impact-sub">High-precision classification</div>
+      </div>
+
+      <div class="impact-stat-box">
+        <div class="impact-number">88.4%</div>
+        <div class="impact-label">Diversion Rate</div>
+        <div class="impact-sub">Prevented landfill burial</div>
+      </div>
+
+      <div class="impact-stat-box">
+        <div class="impact-number">42.6 T</div>
+        <div class="impact-label">CO₂ Displaced</div>
+        <div class="impact-sub">Carbon reduction equivalency</div>
+      </div>
+
+      <div class="impact-stat-box">
+        <div class="impact-number">120+</div>
+        <div class="impact-label">Partner Centers</div>
+        <div class="impact-sub">Regional verified network</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BACKEND STATUS & CONNECTIVITY (Step 1 Preserved) ===== -->
+  <section class="saas-section alt-bg" id="connection">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">System Health</span>
+        <h2 class="section-title">FastAPI Backend Connectivity</h2>
+        <p class="section-subtitle">
+          Direct verification of the Step 1 FastAPI ASGI server at <code>http://localhost:8000</code>.
+        </p>
+      </div>
+
+      <div class="connectivity-card">
+        <p class="hint">
+          Click the button below to initiate a live <code>GET /health</code> test using our centralized API module.
+        </p>
+
+        <button id="checkBtn" class="btn btn-primary" onclick="checkBackendConnection()">
+          🔌 Check Backend Connection
+        </button>
+
+        <!-- Result box – hidden until a response arrives -->
+        <div id="resultBox" class="result-box hidden" aria-live="polite">
+          <div class="result-header">
+            <span id="statusIcon"></span>
+            <span id="statusText"></span>
+          </div>
+          <pre id="responseData"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="saas-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3><span>♻️</span> WasteWise AI</h3>
+        <p>
+          Next-generation environmental management platform transforming municipal waste diversion, corporate ESG compliance, and individual recycling literacy.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Modules</h4>
+        <ul>
+          <li><a href="pages/dashboard.html">Dashboard</a></li>
+          <li><a href="pages/classification.html">Waste Classification</a></li>
+          <li><a href="pages/assistant.html">AI Assistant</a></li>
+          <li><a href="pages/finder.html">Recycling Finder</a></li>
+          <li><a href="pages/collection.html">Collection Logistics</a></li>
+          <li><a href="pages/analytics.html">Analytics &amp; ESG</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>System &amp; API</h4>
+        <ul>
+          <li><a href="http://localhost:8000/docs" target="_blank" rel="noopener">Swagger Documentation ↗</a></li>
+          <li><a href="http://localhost:8000/redoc" target="_blank" rel="noopener">ReDoc Interface ↗</a></li>
+          <li><a href="http://localhost:8000/health" target="_blank" rel="noopener">Health Check Endpoint ↗</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Environment</h4>
+        <ul>
+          <li><a href="#features">Architecture Overview</a></li>
+          <li><a href="#how-it-works">Sorting Standards</a></li>
+          <li><a href="#impact">Sustainability Goals</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2024 WasteWise AI. Step 2 Complete Frontend Implementation.</div>
+      <div>Built with HTML5, CSS3 &amp; Vanilla JavaScript. Zero frontend frameworks.</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

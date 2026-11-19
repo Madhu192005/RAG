@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – Analytics &amp; ESG Metrics</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li>
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li>
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li>
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li>
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li>
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li class="active">
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.2.0 (Step 2)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">Longitudinal Analytics &amp; ESG Performance</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">⚠️ Illustrative Visualizations</div>
+          <button class="btn btn-secondary btn-sm" id="exportDataBtn">📥 Export CSV Audit</button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header flex-between" style="flex-wrap:wrap;">
+          <div>
+            <h1>Recycling Metrics &amp; Circularity Trends</h1>
+            <p>Annual diversion efficiency, material breakdown, and greenhouse gas offset equivalents.</p>
+          </div>
+          <div>
+            <span class="badge badge-green">Reporting Period: Trailing 12 Months</span>
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon green">📦</div>
+            <div class="stat-info">
+              <div class="stat-label">Total Annual Recovery</div>
+              <div class="stat-value">18.4 Tons</div>
+              <div class="stat-delta">↑ 22.8% year-over-year</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon teal">♻️</div>
+            <div class="stat-info">
+              <div class="stat-label">Average Circularity Rate</div>
+              <div class="stat-value">71.5%</div>
+              <div class="stat-delta">Target: 75.0% by Q4</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue">🌱</div>
+            <div class="stat-info">
+              <div class="stat-label">Calculated CO₂ Avoided</div>
+              <div class="stat-value">5.2 T CO₂e</div>
+              <div class="stat-delta">EPA WARM model index</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">🚛</div>
+            <div class="stat-info">
+              <div class="stat-label">Completed Pickups</div>
+              <div class="stat-value">184 Trips</div>
+              <div class="stat-delta">99.1% on-time fulfillment</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 1: Monthly Bar Chart + Category Doughnut -->
+        <div class="dash-grid-2 mb-3">
+          <!-- Monthly Recovery Chart -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Monthly Collected vs Diverted Waste (kg)</h2>
+              <span class="badge badge-grey">12-Month Longitudinal</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height:280px;">
+                <canvas id="monthlyCollectionChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Share Doughnut -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Cumulative Stream Composition</h2>
+              <span class="badge badge-grey">Circularity Share</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height:280px;">
+                <canvas id="materialCategoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Recycling Efficiency Trend + Top Category Horizontal Bar -->
+        <div class="dash-grid-2 mb-3">
+          <!-- Rate Trend Line Chart -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Diversion Rate Efficiency Curve (%)</h2>
+              <span class="badge badge-green">Positive Trend</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height:260px;">
+                <canvas id="diversionTrendChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Volume Horizontal Bar -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Primary Diverted Streams by Volume (kg)</h2>
+              <span class="badge badge-grey">Top 5 Materials</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height:260px;">
+                <canvas id="topStreamsChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Table -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Detailed Municipal Material Audit Log</h2>
+            <span class="badge badge-grey">Verified Sample Data</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-wrap">
+              <table class="ww-table">
+                <thead>
+                  <tr>
+                    <th>Log Date</th>
+                    <th>Waste Stream Typology</th>
+                    <th>Gross Weight</th>
+                    <th>Diverted / Recycled</th>
+                    <th>Carbon Offset Equiv</th>
+                    <th>Destination Facility</th>
+                    <th>Audit Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2024-11-15</td>
+                    <td>Rigid Plastics (PET #1 / HDPE #2)</td>
+                    <td>142 kg</td>
+                    <td>138 kg (97%)</td>
+                    <td>220 kg CO₂e</td>
+                    <td>Metro Green Eco-Recovery</td>
+                    <td><span class="badge badge-green">Verified</span></td>
+                  </tr>
+                  <tr>
+                    <td>2024-11-14</td>
+                    <td>Organic Food Scraps &amp; Yard Residue</td>
+                    <td>310 kg</td>
+                    <td>310 kg (100%)</td>
+                    <td>155 kg CO₂e</td>
+                    <td>Community Bio-Compost Yard</td>
+                    <td><span class="badge badge-green">Composted</span></td>
+                  </tr>
+                  <tr>
+                    <td>2024-11-13</td>
+                    <td>Electronic Scrap &amp; Lithium Cells</td>
+                    <td>48 kg</td>
+                    <td>45 kg (94%)</td>
+                    <td>190 kg CO₂e</td>
+                    <td>Central Circuit E-Waste Depot</td>
+                    <td><span class="badge badge-blue">Smelted/Reclaimed</span></td>
+                  </tr>
+                  <tr>
+                    <td>2024-11-12</td>
+                    <td>Corrugated Fiberboard Packaging</td>
+                    <td>520 kg</td>
+                    <td>512 kg (98%)</td>
+                    <td>410 kg CO₂e</td>
+                    <td>Greenfield Pulp &amp; Paper</td>
+                    <td><span class="badge badge-green">Verified</span></td>
+                  </tr>
+                  <tr>
+                    <td>2024-11-11</td>
+                    <td>Industrial Solvents &amp; Spent Oils</td>
+                    <td>34 kg</td>
+                    <td>28 kg (82%)</td>
+                    <td>85 kg CO₂e</td>
+                    <td>Highland Hazardous Facility</td>
+                    <td><span class="badge badge-orange">Neutralized</span></td>
+                  </tr>
+                  <tr>
+                    <td>2024-11-10</td>
+                    <td>Mixed Non-Recyclable Residuals</td>
+                    <td>185 kg</td>
+                    <td>0 kg (0%)</td>
+                    <td>0 kg CO₂e</td>
+                    <td>Municipal Sanitary Landfill</td>
+                    <td><span class="badge badge-grey">Landfilled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer flex-between">
+            <span class="text-muted">Showing 6 sample audit entries for interface verification</span>
+            <span class="text-muted">Direct database queries will populate via FastAPI in Step 4</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- App Modules -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/analytics.js"></script>
+</body>
+</html>

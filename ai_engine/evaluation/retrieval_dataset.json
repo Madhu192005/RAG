@@ -1,0 +1,121 @@
+[
+  {
+    "question": "What duties do local bodies have under official municipal solid-waste rules?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national"
+  },
+  {
+    "question": "How should households hand over discarded electrical and electronic equipment?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "e_waste"
+  },
+  {
+    "question": "Which official rules govern segregation and collection of plastic waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "plastic_waste"
+  },
+  {
+    "question": "Which verified local guidance applies to waste collection in Tiruchirappalli?",
+    "expected_source_authority": ["Tiruchirappalli municipal authority", "TNPCB"],
+    "expected_jurisdiction": "Tiruchirappalli"
+  },
+  {
+    "question": "Which official guidance explains household segregation of biodegradable and non-biodegradable waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "municipal_solid_waste"
+  },
+  {
+    "question": "What official source covers processing of biodegradable municipal waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "municipal_solid_waste"
+  },
+  {
+    "question": "Which official source describes duties of waste generators?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "municipal_solid_waste"
+  },
+  {
+    "question": "Where can I verify official guidance for collection and transport of municipal solid waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "municipal_solid_waste"
+  },
+  {
+    "question": "Which verified rule explains how waste-processing facilities should be managed?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "municipal_solid_waste"
+  },
+  {
+    "question": "What official guidance covers sanitary waste handling and disposal?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "sanitary_waste"
+  },
+  {
+    "question": "Which authoritative source covers safe disposal of household batteries?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "e_waste"
+  },
+  {
+    "question": "Where is the official guidance for disposing of a damaged mobile phone?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "e_waste"
+  },
+  {
+    "question": "Which current official source covers collection of discarded electronic equipment?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "e_waste"
+  },
+  {
+    "question": "Which official source explains producer responsibilities for plastic packaging waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "plastic_waste"
+  },
+  {
+    "question": "Where can the current rules for plastic waste segregation be verified?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "plastic_waste"
+  },
+  {
+    "question": "Which official guidance applies to disposal of unused medicines and other special-care waste?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national",
+    "expected_waste_category": "special_care_waste"
+  },
+  {
+    "question": "Which verified government publication covers waste collection responsibilities in Tamil Nadu?",
+    "expected_source_authority": ["TNPCB", "Government of Tamil Nadu"],
+    "expected_jurisdiction": "Tamil Nadu"
+  },
+  {
+    "question": "Where can I find verified municipal guidance for waste services in Chennai?",
+    "expected_source_authority": ["Greater Chennai Corporation", "TNPCB"],
+    "expected_jurisdiction": "Chennai"
+  },
+  {
+    "question": "Which official source documents waste collection guidance for households in Tamil Nadu?",
+    "expected_source_authority": ["TNPCB", "Government of Tamil Nadu"],
+    "expected_jurisdiction": "Tamil Nadu"
+  },
+  {
+    "question": "How can I verify whether a municipal waste document has been superseded?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national"
+  },
+  {
+    "question": "Which source should be consulted for the effective date of a waste-management rule?",
+    "expected_source_authority": ["CPCB", "MoEFCC", "Government of India"],
+    "expected_jurisdiction": "national"
+  }
+]

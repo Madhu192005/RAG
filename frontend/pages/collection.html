@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – Collection Logistics</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>.collection-request-card{background:var(--clr-surface);border:1px solid var(--clr-border-lt);border-radius:var(--radius-md);padding:16px}.collection-request-card p{margin:8px 0;overflow-wrap:anywhere}</style>
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li>
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li>
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li>
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li>
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li class="active">
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li>
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.4.0 (Step 8)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">Doorstep Waste Collection Logistics</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">Authenticated collection requests</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header">
+          <h1>Doorstep Collection Scheduling</h1>
+          <p>Submit a collection request and track status updates from authorized collection staff.</p>
+        </div>
+
+        <div class="dash-grid-2">
+          <!-- Left: Collection Request Form -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Schedule Material Pickup</h2>
+              <span class="badge badge-green">Immediate Validation</span>
+            </div>
+            <div class="card-body">
+              <div id="formSuccessAlert" class="alert alert-success" style="display:none;">
+                <span class="alert-icon">✅</span>
+                <div id="successMessage">Pickup request confirmed and staged into queue.</div>
+              </div>
+
+              <form id="collectionForm" novalidate>
+                <!-- Full Name -->
+                <div class="form-group">
+                  <label class="form-label" for="requesterName">Contact Name <span class="required">*</span></label>
+                  <input
+                    type="text"
+                    id="requesterName"
+                    name="requesterName"
+                    class="form-control"
+                    placeholder="e.g. Eleanor Vance"
+                    data-validate="required"
+                    data-label="Full Name"
+                  />
+                </div>
+
+                <!-- Contact Row: Email & Phone -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="requesterEmail">Email Address <span class="required">*</span></label>
+                    <input
+                      type="email"
+                      id="requesterEmail"
+                      name="requesterEmail"
+                      class="form-control"
+                      placeholder="e.g. eleanor@company.org"
+                      data-validate="required,email"
+                      data-label="Email Address"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="requesterPhone">Phone Number <span class="required">*</span></label>
+                    <input
+                      type="tel"
+                      id="requesterPhone"
+                      name="requesterPhone"
+                      class="form-control"
+                      placeholder="e.g. +1 (555) 123-4567"
+                      data-validate="required,phone"
+                      data-label="Phone Number"
+                    />
+                  </div>
+                </div>
+
+                <!-- Material Category & Approx Weight -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="wasteCategory">Material Classification <span class="required">*</span></label>
+                    <select id="wasteCategory" name="wasteCategory" class="form-control" data-label="Waste Category">
+                      <option value="">Select waste category...</option>
+                      <option value="Dry waste">Dry waste</option>
+                      <option value="Wet waste">Wet waste</option>
+                      <option value="Sanitary waste">Sanitary waste</option>
+                      <option value="Special-care waste">Special-care waste</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="weightTier">Estimated Weight Range</label>
+                    <select id="weightTier" name="weightTier" class="form-control">
+                      <option value="Small (< 10 kg)">Small (&lt; 10 kg)</option>
+                      <option value="Medium (10 - 50 kg)" selected>Medium (10 – 50 kg)</option>
+                      <option value="Heavy (50 - 250 kg)">Heavy (50 – 250 kg)</option>
+                      <option value="Commercial Bulk (> 250 kg)">Commercial Bulk (&gt; 250 kg)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="classificationId">Confirmed image classification (optional)</label>
+                  <input id="classificationId" class="form-control" type="number" min="1" placeholder="Classification reference ID" />
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="recyclingCenterId">Verified center (optional)</label>
+                    <select id="recyclingCenterId" class="form-control"><option value="">No center selected</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="quantity">Estimated quantity</label>
+                    <input id="quantity" class="form-control" type="number" min="0.01" step="0.01" placeholder="For example, 4.5" />
+                  </div>
+                </div>
+                <!-- Pickup Address -->
+                <div class="form-group">
+                  <label class="form-label" for="pickupAddress">Facility or Residential Address <span class="required">*</span></label>
+                  <textarea
+                    id="pickupAddress"
+                    name="pickupAddress"
+                    class="form-control"
+                    placeholder="Street, Building/Suite, City, Postal Code and gate access code..."
+                    data-validate="required,minlength=10"
+                    data-label="Pickup Address"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="pickupLocationButton">Pickup coordinates (optional)</label>
+                  <div style="display:flex;gap:10px;align-items:center;">
+                    <button type="button" class="btn btn-outline btn-sm" id="pickupLocationButton">Use my location</button>
+                    <span id="pickupLocationStatus" class="text-muted" aria-live="polite">Location is not stored unless you choose this.</span>
+                  </div>
+                </div>
+
+                <!-- Preferred Date & Time Window -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="pickupDate">Preferred Dispatch Date <span class="required">*</span></label>
+                    <input
+                      type="date"
+                      id="pickupDate"
+                      name="pickupDate"
+                      class="form-control"
+                      data-validate="required"
+                      data-label="Pickup Date"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="timeSlot">Arrival Window</label>
+                    <select id="timeSlot" name="timeSlot" class="form-control">
+                      <option value="Morning (08:00 - 12:00)">Morning (08:00 – 12:00)</option>
+                      <option value="Afternoon (12:00 - 16:00)" selected>Afternoon (12:00 – 16:00)</option>
+                      <option value="Evening (16:00 - 19:00)">Evening (16:00 – 19:00)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                  <label class="form-label" for="specialNotes">Special Handling Instructions (Optional)</label>
+                  <input
+                    type="text"
+                    id="specialNotes"
+                    name="specialNotes"
+                    class="form-control"
+                    placeholder="e.g. Loading dock on North alley; pallet jack required"
+                  />
+                </div>
+
+                <div class="mt-3">
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitPickupBtn">
+                    🚛 Book Pickup Dispatch
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Right: Request Status Queue -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Dispatch Tracking &amp; Queue</h2>
+              <span class="badge badge-blue" id="requestCount">Loading…</span>
+            </div>
+            <div class="card-body">
+              <p class="text-muted" style="font-size:0.88rem;margin-bottom:16px;">
+                Your requests and their latest status. Pickup addresses are visible only to you and authorized staff.
+              </p>
+
+              <div id="requestsList" style="display:flex;flex-direction:column;gap:14px;">
+                <!-- Populated by collection.js -->
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="text-muted" style="font-size:0.82rem;">
+                  Requests load from your authenticated account.
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/collection.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+.env
+backend/.env
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+.pytest_cache/
+backend/venv/
+.private_uploads/
+dataset/raw/
+dataset/processed/
+models/waste_classifier/*.pt
+models/waste_classifier/*.pth
+models/waste_classifier/evaluation.json
+venv/
+.idea/
+.vscode/

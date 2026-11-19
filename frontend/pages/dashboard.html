@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – Management Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <style>.collection-ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.collection-ops-item{padding:14px;border:1px solid var(--clr-border-lt);border-radius:var(--radius-md);background:var(--clr-surface)}</style>
+</head>
+<body>
+
+  <!-- Overlay for mobile drawer -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li class="active">
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li>
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li>
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li>
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li>
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li>
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.4.0 (Step 8)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">Operations Dashboard</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">⚠️ Illustrative Data</div>
+          <button class="btn btn-secondary btn-sm" id="refreshStatsBtn">🔄 Refresh Data</button>
+          <a href="classification.html" class="btn btn-primary btn-sm">+ New Classification</a>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header flex-between" style="flex-wrap:wrap;">
+          <div>
+            <h1>Facility &amp; Community Operations</h1>
+            <p>Real-time waste logging, recovery rates, and pending collection requests.</p>
+          </div>
+          <div>
+            <span class="badge badge-green">Reporting Cycle: Current Month</span>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon green">🗑️</div>
+            <div class="stat-info">
+              <div class="stat-label">Total Waste Processed</div>
+              <div class="stat-value" id="statTotalWaste">—</div>
+              <div class="stat-delta">Live database total</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon teal">♻️</div>
+            <div class="stat-info">
+              <div class="stat-label">Recycled &amp; Diverted</div>
+              <div class="stat-value" id="statRecycled">—</div>
+              <div class="stat-delta">Recorded collection quantities</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue">🚛</div>
+            <div class="stat-info">
+              <div class="stat-label">Active Pickups</div>
+              <div class="stat-value" id="statPickups">—</div>
+              <div class="stat-delta">Current pending requests</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">🌱</div>
+            <div class="stat-info">
+              <div class="stat-label">CO₂ Offset Total</div>
+              <div class="stat-value" id="statCO2">—</div>
+              <div class="stat-delta">Calculated from recorded collections</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dash Row 1: Recent Reports + Category Breakdown -->
+        <div class="dash-grid-2 mb-3">
+          <!-- Recent Waste Reports Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Recent Waste Log Entries</h2>
+              <a href="classification.html" class="btn btn-outline btn-sm">Log Waste</a>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrap">
+                <table class="ww-table">
+                  <thead>
+                    <tr>
+                      <th>Ref ID</th>
+                      <th>Material / Item</th>
+                      <th>Category</th>
+                      <th>Weight</th>
+                      <th>Logged</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentReportsBody"><tr><td colspan="6">Loading recorded reports…</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer flex-between">
+              <span class="text-muted" id="reportsCount">Recent reports from the database</span>
+              <a href="analytics.html" class="text-muted" style="text-decoration:underline;">View All History in Analytics →</a>
+            </div>
+          </div>
+
+          <!-- Waste by Category Donut Chart -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Waste Stream Proportions</h2>
+              <span class="badge badge-grey">Current Month Breakdown</span>
+            </div>
+            <div class="card-body">
+              <div class="chart-container" style="height:270px;">
+                <canvas id="categoryDonutChart"></canvas>
+              </div>
+            </div>
+            <div class="card-footer" style="font-size:0.85rem;color:var(--clr-text-muted);" id="categoryChartNote">Live waste report distribution.</div>
+          </div>
+        </div>
+
+        <!-- Dash Row 2: Recent Collection Requests + Quick Actions -->
+        <div class="dash-grid-2">
+          <!-- Recent Collection Requests -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Recent Doorstep Pickups</h2>
+              <a href="collection.html" class="btn btn-outline btn-sm">Schedule New</a>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <div class="table-wrap">
+                <table class="ww-table">
+                  <thead>
+                    <tr>
+                      <th>Ref</th>
+                      <th>Location</th>
+                      <th>Category</th>
+                      <th>Preferred Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentRequestsBody"><tr><td colspan="5">Loading collection requests…</td></tr></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Integration Notice -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Quick Workflow Actions</h2>
+              <span class="badge badge-green">Instant Access</span>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-2">Jump straight to platform modules to process materials or service user requests:</p>
+              
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <a href="classification.html" class="btn btn-primary" style="justify-content:flex-start;">
+                  <span style="font-size:1.2rem;">📷</span> Classify Waste with Computer Vision
+                </a>
+                <a href="assistant.html" class="btn btn-secondary" style="justify-content:flex-start;">
+                  <span style="font-size:1.2rem;">🤖</span> Query AI Assistant on Sorting Mandates
+                </a>
+                <a href="collection.html" class="btn btn-secondary" style="justify-content:flex-start;">
+                  <span style="font-size:1.2rem;">🚛</span> Dispatch / Schedule Doorstep Collection
+                </a>
+                <a href="finder.html" class="btn btn-secondary" style="justify-content:flex-start;">
+                  <span style="font-size:1.2rem;">📍</span> Locate Nearest Certified Recycling Drop-Off
+                </a>
+              </div>
+
+              <div class="alert alert-info mt-3" style="margin-bottom:0;">
+                <span class="alert-icon">ℹ️</span>
+                <div>
+                  <strong>Data source:</strong> Dashboard figures and recent entries are loaded from stored backend records.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-3" id="collectionOperationsPanel" style="display:none;">
+          <div class="card-header"><h2>Collection Operations</h2><span class="badge badge-blue">Administrator view</span></div>
+          <div class="card-body"><div class="collection-ops-grid" id="collectionOperationsGrid"></div></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- CDN for Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- App Modules -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

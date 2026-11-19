@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WasteWise AI – Recycling Center Finder</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .filter-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      background: var(--clr-white);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      border: 1px solid var(--clr-border-lt);
+    }
+    .filter-input-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+    .centers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .center-card {
+      background: var(--clr-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--clr-border-lt);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .center-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .center-card-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--clr-border-lt);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: var(--clr-surface);
+    }
+    .center-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--clr-text);
+      margin-bottom: 4px;
+    }
+    .center-distance {
+      font-size: 0.8rem;
+      color: var(--clr-primary);
+      font-weight: 600;
+    }
+    .center-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.9rem;
+    }
+    .center-detail-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--clr-text-muted);
+    }
+    .center-detail-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+    .center-card-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--clr-border-lt);
+      display: flex;
+      gap: 10px;
+      background: var(--clr-surface);
+    }
+    #centerMap { height: 360px; border-radius: var(--radius-md); border: 1px solid var(--clr-border-lt); margin-bottom: 24px; display:none; }
+    .finder-status { margin: 12px 0 18px; }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <a href="../index.html" class="sidebar-brand">
+        <span class="brand-icon">♻️</span>
+        <span class="brand-text">
+          WasteWise AI
+          <span class="brand-sub">Management Platform</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Operations</span>
+        <ul>
+          <li>
+            <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+          </li>
+          <li>
+            <a href="classification.html"><span class="nav-icon">📷</span> Waste Vision</a>
+          </li>
+          <li>
+            <a href="assistant.html"><span class="nav-icon">🤖</span> AI Assistant</a>
+          </li>
+        </ul>
+
+        <span class="nav-section-label">Services</span>
+        <ul>
+          <li class="active">
+            <a href="finder.html"><span class="nav-icon">📍</span> Center Finder</a>
+          </li>
+          <li>
+            <a href="collection.html"><span class="nav-icon">🚛</span> Collection Logistics</a>
+          </li>
+          <li>
+            <a href="analytics.html"><span class="nav-icon">📈</span> Analytics &amp; ESG</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:8px;">
+          <span id="backendStatusPill" class="status-pill pending">● Checking API…</span>
+        </div>
+        <div>WasteWise AI v0.4.0 (Step 8)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebarToggle" aria-label="Toggle menu">☰</button>
+          <span class="page-title">Recycling Center Directory</span>
+        </div>
+        <div class="topbar-right">
+          <div class="demo-notice">Verified center records</div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <div class="page-header flex-between" style="flex-wrap:wrap;">
+          <div>
+            <h1>Recycling Center Locator</h1>
+            <p>Filter regional certified centers by accepted waste streams, operating hours, and location.</p>
+          </div>
+          <div>
+            <span class="badge badge-green" id="resultsCountBadge">Search to begin</span>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="filter-bar">
+          <div class="filter-input-wrap">
+            <input
+              type="text"
+              id="searchInput"
+              class="form-control"
+              placeholder="Enter city or postal code"
+            />
+          </div>
+
+          <div style="min-width:210px;">
+            <select class="form-control" id="categoryFilter">
+              <option value="">Select waste type</option>
+              <optgroup label="Waste streams">
+                <option>Dry waste</option><option>Wet waste</option><option>Sanitary waste</option><option>Special-care waste</option>
+              </optgroup>
+              <optgroup label="Specific material classes">
+                <option>Plastic</option><option>Paper / Cardboard</option><option>Metal</option><option>Glass</option>
+                <option>Organic / Food</option><option>Sanitary Products</option><option>Battery / E-Waste</option>
+              </optgroup>
+            </select>
+          </div>
+          <div style="min-width:130px;">
+            <select class="form-control" id="radiusFilter"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="25">25 km</option><option value="50">50 km</option></select>
+          </div>
+          <div style="min-width:170px;"><input class="form-control" id="centerTypeFilter" maxlength="100" placeholder="Center type (optional)" /></div>
+          <button class="btn btn-outline" id="currentLocationBtn" type="button">Use current location</button>
+          <button class="btn btn-primary" id="searchBtn" type="button">Search centers</button>
+          <button class="btn btn-secondary" id="resetFiltersBtn">Reset Filters</button>
+        </div>
+
+        <p class="text-muted finder-status" id="finderStatus" aria-live="polite">Center results come from verified database records. Location is used only after you search.</p>
+        <div id="centerMap" role="region" aria-label="Map of verified recycling centers"></div>
+
+        <!-- Results Grid -->
+        <div class="centers-grid" id="centersContainer">
+          <!-- Populated dynamically by finder.js -->
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="card empty-state" id="emptyState" style="display:none;margin-top:20px;">
+          <div class="empty-icon">📍</div>
+          <h3>No Matching Facilities Found</h3>
+          <p>No verified centers explicitly accepting this waste type were found. Try another radius or enter a city or postal code.</p>
+          <div class="mt-2">
+            <button class="btn btn-outline" id="clearSearchBtn">Reset Search</button>
+          </div>
+        </div>
+
+        <!-- Transparency Callout -->
+        <div class="alert alert-info mt-3">
+          <span class="alert-icon">ℹ️</span>
+          <div>
+            <strong>Location privacy:</strong> The browser asks for location only after you press Use current location. Coordinates are used for this search and are not saved in your account. Map tiles are provided by OpenStreetMap and require visible attribution.
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/finder.js"></script>
+</body>
+</html>
